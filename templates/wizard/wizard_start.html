@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_hindi %}फॉर्म विज़ार्ड - सही सरकारी फॉर्म खोजें{% else %}Guided Start Wizard - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div style="margin-bottom: var(--spacing-lg);" class="animate-enter">
+    <h1>{% if is_hindi %}सही फॉर्म का चयन करें{% else %}Find Your Exact Form{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead); max-width: 60ch;">
+      {% if is_hindi %}
+        सैकड़ों फॉर्म्स में भटकने की आवश्यकता नहीं। अपनी श्रेणी चुनें और कुछ सरल हाँ/ना प्रश्नों के उत्तर दें।
+      {% else %}
+        Never scroll through confusing lists. Select your service category and answer a few quick questions to land on the exact verified guide.
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- 4 Authentic Archival Specimens -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); width: 100%;">
+    <div class="specimen-frame animate-enter delay-1" style="max-height: 180px;">
+      <img src="{% static 'img/stamp-of-chamba-1938-colnect-601464-1.jpg' %}" 
+           width="1024" height="632" 
+           alt="Official postal stamp dispatch specimen representing verified administrative procedure" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame animate-enter delay-2" style="max-height: 180px;">
+      <img src="{% static 'img/figure-of-fantastic-human-like-creature-with.jpg' %}" 
+           width="3231" height="2347" 
+           alt="Historical engraving of administrative verification and record keeping ledger" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame animate-enter delay-3" style="max-height: 180px;">
+      <img src="{% static 'img/november-a-general-post-delivery-in-opposition.jpg' %}" 
+           width="3000" height="2138" 
+           alt="Archival administrative ledger and document distribution record" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame animate-enter delay-4" style="max-height: 180px;">
+      <img src="{% static 'img/woman-sealing-a-letter.jpg' %}" 
+           width="1920" height="2336" 
+           alt="Period engraving representing privacy in official administrative correspondence" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--spacing-lg); align-items: start;">
+    <form method="post" class="paper-card animate-enter delay-2" style="padding: var(--spacing-lg); width: 100%;">
+      {% csrf_token %}
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); flex-wrap: wrap; gap: 8px;">
+        <h2>{% if is_hindi %}सेवा विवरण चुनें{% else %}Select Your Service{% endif %}</h2>
+        <span class="mode-badge">{% if is_hindi %}चरण 1 / 2{% else %}Step 1 of 2{% endif %}</span>
+      </div>
+
+      <div class="form-group animate-enter delay-3">
+        <label class="form-label" for="category_id">
+          {% if is_hindi %}1. आपको किस प्रकार का कार्य करना है? (Select Category){% else %}1. What kind of government service do you need?{% endif %}
+        </label>
+        <select name="category_id" id="category_id" class="form-select" required>
+          <option value="">{% if is_hindi %}— श्रेणी चुनें —{% else %}— Select Category —{% endif %}</option>
+          {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group animate-enter delay-4" style="margin-top: var(--spacing-md);">
+        <label class="form-label" for="state">
+          {% if is_hindi %}2. आपका राज्य / केंद्र शासित प्रदेश (State / UT){% else %}2. Your State or Union Territory{% endif %}
+        </label>
+        <select name="state" id="state" class="form-select">
+          <option value="Central / All India">Central / All India (केंद्रीय योजना / राष्ट्रीय सेवा)</option>
+          <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+          <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+          <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
+          <option value="Bihar">Bihar (बिहार)</option>
+          <option value="Delhi">Delhi (दिल्ली NCT)</option>
+          <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+          <option value="Gujarat">Gujarat (गुजरात)</option>
+          <option value="Haryana">Haryana (हरियाणा)</option>
+          <option value="Punjab">Punjab (पंजाब)</option>
+          <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
+          <option value="Other">Other State / All India</option>
+        </select>
+      </div>
+
+      <div style="margin-top: var(--spacing-lg);" class="animate-enter delay-5">
+        <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+          {% if is_hindi %}प्रश्नावली शुरू करें &rarr;{% else %}Continue to Questions &rarr;{% endif %}
+        </button>
+      </div>
+    </form>
+
+    <div class="paper-card animate-enter delay-3" style="padding: var(--spacing-lg); background-color: var(--surface-tint); width: 100%;">
+      <h2>{% if is_hindi %}विज़ार्ड कैसे कार्य करता है{% else %}How The Wizard Works{% endif %}</h2>
+      <ul style="list-style: none; margin-top: var(--spacing-sm); line-height: 1.8;">
+        <li class="animate-enter delay-3" style="margin-bottom: var(--spacing-xs);">
+          <strong>{% if is_hindi %}कोई व्यक्तिगत डेटा नहीं:{% else %}Zero Credential Policy:{% endif %}</strong>
+          <span style="display: block; color: var(--ink-secondary);">{% if is_hindi %}हम कभी आधार, पैन या पासवर्ड नहीं मांगते।{% else %}We never ask for your identity numbers or OTPs.{% endif %}</span>
+        </li>
+        <li class="animate-enter delay-4" style="margin-bottom: var(--spacing-xs);">
+          <strong>{% if is_hindi %}सरल हाँ/ना निर्णय वृक्ष:{% else %}Simple Yes/No Decision Tree:{% endif %}</strong>
+          <span style="display: block; color: var(--ink-secondary);">{% if is_hindi %}अधिकतम 3 से 5 प्रश्नों में सही आधिकारिक गाइड मिल जाती है।{% else %}Find the verified procedure in 3 to 5 easy steps.{% endif %}</span>
+        </li>
+        <li class="animate-enter delay-5">
+          <strong>{% if is_hindi %}बिचौलिए की फीस शून्य:{% else %}Zero Middlemen Fees:{% endif %}</strong>
+          <span style="display: block; color: var(--ink-secondary);">{% if is_hindi %}प्रत्येक गाइड आधिकारिक पोर्टल के नियमों पर आधारित है।{% else %}Guides show exact portal rules and government fees.{% endif %}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

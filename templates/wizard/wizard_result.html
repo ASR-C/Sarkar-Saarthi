@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}उपयुक्त फॉर्म मिल गया - सरकार साथी{% else %}Your Matching Form - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap" style="max-width: 840px;">
+
+  <div style="margin-bottom: var(--spacing-md); text-align: center;">
+    <span class="stamp-badge stamp-badge-verified" style="font-size: 1rem; padding: 6px 16px;">
+      {% if is_hindi %}सटीक फॉर्म मिल गया!{% else %}MATCHING FORM FOUND{% endif %}
+    </span>
+  </div>
+
+  <div class="paper-card" style="padding: var(--spacing-xl);">
+    <div style="display: flex; gap: var(--spacing-xs); align-items: center; margin-bottom: var(--spacing-xs);">
+      <span class="mode-badge">{{ guide.get_mode_display }}</span>
+      <span class="stamp-badge stamp-badge-verified">{% if is_hindi %}सत्यापित{% else %}VERIFIED{% endif %}</span>
+    </div>
+
+    <h1 style="font-size: clamp(1.8rem, 1.5rem + 1.2vw, 2.8rem);">
+      {{ translation.title }}
+    </h1>
+
+    <p style="font-size: var(--font-size-lead); color: var(--ink-secondary); margin-bottom: var(--spacing-md);">
+      {{ translation.summary }}
+    </p>
+
+    <!-- Keep These Ready Checklist -->
+    <div style="background-color: var(--surface-tint); border: 2px solid var(--ink-primary); padding: var(--spacing-md); border-radius: var(--radius-sharp); margin-bottom: var(--spacing-lg);">
+      <h3 style="margin-bottom: var(--spacing-xs);">
+        {% if is_hindi %}आवेदन से पूर्व ये दस्तावेज़ तैयार रखें:{% else %}Keep These Ready Before You Start:{% endif %}
+      </h3>
+
+      {% if documents %}
+        <ul style="margin-left: 20px; line-height: 1.8;">
+          {% for doc in documents %}
+            <li>
+              <strong>{{ doc.name }}</strong> 
+              {% if doc.allowed_formats %}({{ doc.allowed_formats }}){% endif %}
+              {% if doc.max_kb %}(max {{ doc.max_kb }} KB){% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p style="margin: 0; font-style: italic;">
+          {% if is_hindi %}पहचान पत्र, निवास प्रमाण पत्र व आवश्यक विवरण।{% else %}Government ID proof and standard applicant details.{% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Official Fee Display -->
+    <div class="receipt-card" style="margin-bottom: var(--spacing-lg);">
+      <div class="receipt-row">
+        <span>{% if is_hindi %}आधिकारिक सरकारी शुल्क:{% else %}Official Portal Fee:{% endif %}</span>
+        <span class="receipt-fee-amount">{{ guide.fee_text }}</span>
+      </div>
+      <div class="fair-pricing-box" style="margin: 0;">
+        {% if is_hindi %}
+          साइबर कैफ़े जाने की आवश्यकता नहीं है। आप यह आवेदन अपने फोन से सीधे कर सकते हैं।
+        {% else %}
+          No agent needed. You can complete this application on your phone for this exact fee.
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+      <a href="{% url 'guides:guide_detail' guide.slug %}" class="btn btn-primary btn-large" style="flex: 1;">
+        {% if is_hindi %}सम्पूर्ण गाइड व प्रक्रिया देखें &rarr;{% else %}Open Step-by-Step Guide &rarr;{% endif %}
+      </a>
+      <a href="{% url 'wizard:start' %}" class="btn btn-secondary btn-large">
+        {% if is_hindi %}पुनः खोजें{% else %}Search Another Form{% endif %}
+      </a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

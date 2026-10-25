@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}हमारे बारे में व गोपनीयता नीति - सरकार साथी{% else %}About Us & Privacy Charter - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap" style="max-width: 860px;">
+  <div style="margin-bottom: var(--spacing-lg);">
+    <h1>{% if is_hindi %}हमारे बारे में व नागरिक गोपनीयता नीति{% else %}Mission & Privacy Charter{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead);">
+      {% if is_hindi %}
+        नागरिकों को जागरूक बनाना, बिचौलियों की लूट रोकना और पूर्ण डेटा पारदर्शिता सुनिश्चित करना।
+      {% else %}
+        Helping Indian citizens navigate public digital services with dignity and zero extortion.
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Mission Section -->
+  <section class="paper-card" style="margin-bottom: var(--spacing-lg);">
+    <h2>{% if is_hindi %}हमारा उद्देश्य (The Problem & Vision){% else %}Why Sarkari Saathi Exists{% endif %}</h2>
+    <p>
+      {% if is_hindi %}
+        भारत भर में लाखों नागरिक छात्रवृत्ति, जाति प्रमाण पत्र, बिजली बिल, पासपोर्ट या राशन कार्ड जैसे सरल सरकारी कार्यों के लिए साइबर कैफ़े और अनधिकृत दलालों को सैकड़ों रुपये अधिक चुकाते हैं। इसका कारण सरकारी पोर्टलों की जटिल अंग्रेज़ी भाषा, तकनीकी संकोच और फ़र्ज़ी वेबसाइटों का डर है।
+      {% else %}
+        Across India, millions of citizens pay excessive fees to cyber cafes and unauthorized touts for simple administrative forms like scholarships, utility connections, driving licences, or certificates. They do this because official portals can be intimidating, instructions are often buried in dense bureaucratic English, and search engines are plagued with look-alike scam sites.
+      {% endif %}
+    </p>
+    <p>
+      {% if is_hindi %}
+        <strong>सरकार साथी का सिद्धांत स्पष्ट है:</strong> हम केवल शिक्षित और मार्गदर्शित करते हैं। हम कभी भी किसी नागरिक का फॉर्म स्वयं जमा नहीं करते और न ही कभी आपके आधिकारिक सरकारी लॉगिन या पासवर्ड को छूते हैं।
+      {% else %}
+        <strong>Sarkari Saathi's core principle is educational:</strong> We teach you how to fill your own forms safely on your smartphone. We never submit forms for you, and we never touch your government portal credentials.
+      {% endif %}
+    </p>
+  </section>
+
+  <!-- Legal Independence Disclosure -->
+  <section class="paper-card" style="border-left: 8px solid var(--stamp-red); margin-bottom: var(--spacing-lg);">
+    <h2 style="color: var(--stamp-red);">
+      {% if is_hindi %}वैधानिक स्वतंत्रता घोषणा (Legal Independence Disclosure){% else %}Independent Entity Notice{% endif %}
+    </h2>
+    <p>
+      {% if is_hindi %}
+        सरकार साथी एक स्वतंत्र, ग़ैर-सरकारी नागरिक शिक्षा मंच है। यह भारत सरकार, राज्य सरकारों, या किसी भी मंत्रालय, विभाग अथवा आयोग से किसी भी प्रकार से संबद्ध नहीं है।
+      {% else %}
+        Sarkari Saathi is an independent, non-governmental public information initiative. It is not affiliated, endorsed, or partnered with the Government of India or any state government, department, commission, or municipal authority.
+      {% endif %}
+    </p>
+    <p style="font-size: 0.95rem; color: var(--ink-secondary);">
+      {% if is_hindi %}
+        हम भारतीय राष्ट्रीय प्रतीक (अशोक स्तंभ) या सरकारी लोगो का उपयोग नहीं करते। किसी भी आधिकारिक सरकारी पोर्टल का पता हमेशा <strong>.gov.in</strong> या <strong>.nic.in</strong> पर समाप्त होता है।
+      {% else %}
+        In compliance with the State Emblem of India (Prohibition of Improper Use) Act, 2005, we do not use official emblems or government badges. Official government portals are strictly distinguished by their verified .gov.in or .nic.in domain endings.
+      {% endif %}
+    </p>
+  </section>
+
+  <!-- Privacy Policy Aligned with DPDP Act 2023 -->
+  <section class="paper-card" style="margin-bottom: var(--spacing-lg);">
+    <h2>
+      {% if is_hindi %}नागरिक गोपनीयता नीति (DPDP Act, 2023 अनुपालन){% else %}Privacy Charter (DPDP Act, 2023 Aligned){% endif %}
+    </h2>
+    
+    <div style="margin-top: var(--spacing-sm); line-height: 1.8;">
+      <h4>{% if is_hindi %}1. डेटा न्यूनतमकरण (Data Minimisation){% else %}1. Minimal Data Collection{% endif %}</h4>
+      <p style="font-size: 0.95rem; color: var(--ink-secondary);">
+        {% if is_hindi %}
+          हम केवल आपका नाम, ईमेल पता (सत्यापन हेतु), पसंदीदा भाषा और राज्य संग्रहित करते हैं। हम कभी भी आधार नंबर, पैन नंबर, बैंक खाता संख्या, पासवर्ड या सरकारी ओटीपी नहीं मांगते और न ही संग्रहीत करते हैं।
+        {% else %}
+          We collect only your name, email (for verification), language, and state. We strictly never ask for or store Aadhaar numbers, PAN cards, bank account details, or government passwords.
+        {% endif %}
+      </p>
+
+      <h4>{% if is_hindi %}2. फ़ाइल गोपनीयता (Private In-Browser File Tools){% else %}2. Zero-Server File Privacy{% endif %}</h4>
+      <p style="font-size: 0.95rem; color: var(--ink-secondary);">
+        {% if is_hindi %}
+          हमारे फोटो और हस्ताक्षर रीसाइज़िंग टूल्स पूर्णतः आपके फ़ोन के वेब ब्राउज़र में चलते हैं। आपकी व्यक्तिगत तस्वीरें या दस्तावेज़ कभी भी हमारे सर्वर पर अपलोड नहीं होते।
+        {% else %}
+          Photo and signature compression tools execute entirely in your local browser using client-side Web APIs. Your personal images never travel to or get saved on our servers.
+        {% endif %}
+      </p>
+
+      <h4>{% if is_hindi %}3. खाता व डेटा निष्कासन अधिकार{% else %}3. Right to Erasure & Deletion{% endif %}</h4>
+      <p style="font-size: 0.95rem; color: var(--ink-secondary);">
+        {% if is_hindi %}
+          भारत के डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम (DPDP Act, 2023) के अंतर्गत किसी भी समय अपना खाता और संपूर्ण डेटा हटाने के लिए <a href="mailto:privacy@sarkarisaathi.org">privacy@sarkarisaathi.org</a> पर संपर्क करें।
+        {% else %}
+          Under India's Digital Personal Data Protection Act, 2023, you have the full right to delete your account and associated records by emailing privacy@sarkarisaathi.org.
+        {% endif %}
+      </p>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

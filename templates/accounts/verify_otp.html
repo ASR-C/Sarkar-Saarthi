@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}ईमेल सत्यापन - सरकार साथी{% else %}Verify Email OTP - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap" style="max-width: 520px;">
+  <div style="margin-bottom: var(--spacing-lg); text-align: center;">
+    <div style="margin-bottom: var(--spacing-xs);">
+      <span class="stamp-badge stamp-badge-alert">
+        {% if is_hindi %}सत्यापन कोड आवश्यक{% else %}ACTION REQUIRED{% endif %}
+      </span>
+    </div>
+    <h1>{% if is_hindi %}ईमेल सत्यापित करें{% else %}Verify Your Email{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead);">
+      {% if is_hindi %}
+        हमने <strong>{{ user.email }}</strong> पर 6-अंकों का सत्यापन कोड भेजा है।
+      {% else %}
+        We sent a 6-digit verification code to <strong>{{ user.email }}</strong>.
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="paper-card" style="padding: var(--spacing-lg);">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group" style="text-align: center;">
+        <label class="form-label" for="otp-input" style="font-size: 1.1rem;">
+          {% if is_hindi %}6-अंकों का सत्यापन कोड दर्ज करें (Enter 6-digit OTP){% else %}Enter 6-digit verification code{% endif %}
+        </label>
+        
+        <input type="text" name="otp" id="otp-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" required autocomplete="one-time-code" autofocus class="form-input" style="font-size: 2rem; letter-spacing: 10px; text-align: center; font-weight: 700; max-width: 280px; margin: 12px auto; display: block;" placeholder="••••••">
+
+        <p class="form-help">
+          {% if is_hindi %}यह कोड 10 मिनट के लिए मान्य है (अधिकतम 5 प्रयास)।{% else %}Valid for 10 minutes (maximum 5 attempts).{% endif %}
+        </p>
+      </div>
+
+      <div style="margin-top: var(--spacing-md);">
+        <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+          {% if is_hindi %}सत्यापन पूर्ण करें व प्रवेश करें{% else %}Verify Code &amp; Continue &rarr;{% endif %}
+        </button>
+      </div>
+    </form>
+
+    <div style="margin: var(--spacing-lg) 0; height: var(--spacing-sm);"></div>
+
+    <form method="post" style="text-align: center;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="resend">
+      <p style="font-size: 0.95rem; color: var(--ink-secondary); margin-bottom: var(--spacing-xs);">
+        {% if is_hindi %}कोड प्राप्त नहीं हुआ? स्पैम फोल्डर भी जांचें।{% else %}Did not receive the code? Check spam folder or resend.{% endif %}
+      </p>
+      <button type="submit" class="btn btn-secondary" style="min-height: 42px; padding: 6px 16px; font-size: 0.95rem;">
+        {% if is_hindi %}नया कोड भेजें (Resend OTP){% else %}Resend Verification Code{% endif %}
+      </button>
+    </form>
+  </div>
+
+  <div style="text-align: center; margin-top: var(--spacing-md); font-size: 0.9rem; color: var(--ink-secondary);">
+    <a href="{% url 'accounts:signup' %}">{% if is_hindi %}&larr; दूसरे ईमेल से पंजीकरण करें{% else %}&larr; Change email address{% endif %}</a>
+  </div>
+</div>
+{% endblock %}

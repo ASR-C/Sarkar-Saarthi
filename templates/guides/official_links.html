@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_hindi %}सत्यापित सरकारी वेबसाइट डायरेक्टरी - सरकार साथी{% else %}Verified Official Government Portals - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div style="margin-bottom: var(--spacing-lg);" class="animate-enter">
+    <h1>{% if is_hindi %}सत्यापित सरकारी पोर्टल डायरेक्टरी{% else %}Verified Government Link Directory{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead); max-width: 60ch;">
+      {% if is_hindi %}
+        नागरिकों की सुरक्षा के लिए जांची गई आधिकारिक सरकारी वेबसाइटों की सूची।
+      {% else %}
+        An allowlist of verified official central and state government portals to protect citizens from phishing and fake look-alikes.
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- 4 Authentic Archival Specimens -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); width: 100%;" class="animate-enter delay-1">
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/stamp-of-chamba-1938-colnect-601464-1.jpg' %}" 
+           width="1024" height="632" 
+           alt="Official postal stamp dispatch specimen representing verified administrative procedure" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/figure-of-fantastic-human-like-creature-with.jpg' %}" 
+           width="3231" height="2347" 
+           alt="Historical engraving of administrative verification and record keeping ledger" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/november-a-general-post-delivery-in-opposition.jpg' %}" 
+           width="3000" height="2138" 
+           alt="Archival administrative ledger and document distribution record" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/woman-sealing-a-letter.jpg' %}" 
+           width="1920" height="2336" 
+           alt="Period engraving representing privacy in official administrative correspondence" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+  </div>
+
+  <div class="fake-site-warning animate-enter delay-2" style="margin-bottom: var(--spacing-lg); width: 100%;">
+    <strong>{% if is_hindi %}संदिग्ध या फ़र्ज़ी साइट की सूचना दें:{% else %}Notice Suspicious Fake Sites:{% endif %}</strong>
+    <p style="margin: 4px 0 0 0; font-size: 1rem; max-width: 60ch;">
+      {% if is_hindi %}
+        यदि आपको कोई ऐसी वेबसाइट दिखती है जो सरकारी जैसी दिखती है परंतु अतिरिक्त पैसे या गोपनीय पासवर्ड मांगती है, तो कृपया हमें <a href="mailto:security@sarkarisaathi.org" style="color: var(--stamp-red); font-weight: bold;">security@sarkarisaathi.org</a> पर सूचित करें।
+      {% else %}
+        If you encounter a fraudulent or look-alike site posing as an official portal or charging exorbitant fees, report it to <a href="mailto:security@sarkarisaathi.org" style="color: var(--stamp-red); font-weight: bold;">security@sarkarisaathi.org</a> for review and community alert.
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="paper-card animate-enter delay-3" style="width: 100%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); flex-wrap: wrap; gap: 8px;">
+      <h2>{% if is_hindi %}अधिकृत सरकारी डोमेन सूची{% else %}Authorized Government Domains{% endif %}</h2>
+      <span class="stamp-badge stamp-badge-verified">{% if is_hindi %}आधिकारिक डोमेन सूची{% else %}Official Allowlist{% endif %}</span>
+    </div>
+
+    <div class="specs-table-wrap" style="overflow-x: auto; width: 100%;">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>{% if is_hindi %}पोर्टल का नाम{% else %}Portal Name{% endif %}</th>
+            <th>{% if is_hindi %}आधिकारिक डोमेन{% else %}Verified Domain{% endif %}</th>
+            <th>{% if is_hindi %}कार्यक्षेत्र{% else %}Jurisdiction{% endif %}</th>
+            <th>{% if is_hindi %}सीधा लिंक{% else %}Direct Link{% endif %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for link in links %}
+            <tr class="animate-enter delay-{{ forloop.counter|default:1 }}">
+              <td data-label="{% if is_hindi %}पोर्टल{% else %}Portal{% endif %}">
+                <strong>{{ link.label }}</strong>
+              </td>
+              <td data-label="{% if is_hindi %}डोमेन{% else %}Domain{% endif %}">
+                <span class="stamp-badge stamp-badge-verified" style="font-size: 0.95rem;">
+                  {{ link.domain }}
+                </span>
+              </td>
+              <td data-label="{% if is_hindi %}क्षेत्र{% else %}Jurisdiction{% endif %}">
+                <span class="mode-badge">{{ link.state_scope|title }}</span>
+              </td>
+              <td data-label="{% if is_hindi %}लिंक{% else %}Link{% endif %}">
+                <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" style="font-weight: 600; color: var(--stamp-green);">
+                  {% if is_hindi %}वेबसाइट खोलें &nearr;{% else %}Open Portal &nearr;{% endif %}
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" style="text-align: center; padding: var(--spacing-lg);">
+                {% if is_hindi %}पोर्टल सूची लोड हो रही है।{% else %}Official links are being indexed.{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

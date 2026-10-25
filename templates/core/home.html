@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sarkari Saathi - Government Forms at Home Without Middlemen{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+
+  <!-- Hero Section: Headline + Dominant Archival Image Focal Point -->
+  <section style="margin: var(--spacing-lg) 0 var(--spacing-xl) 0;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--spacing-lg); align-items: center;">
+      
+      <!-- Left Column: Title & Actions -->
+      <div>
+        <h1 class="hero-display-title animate-enter">
+          {% if is_hindi %}
+            सरकारी फॉर्म स्वयं भरें।
+          {% else %}
+            Government Forms at Home.
+          {% endif %}
+        </h1>
+
+        <p class="animate-enter delay-1" style="font-size: var(--font-size-lead); color: var(--ink-secondary); margin-bottom: var(--spacing-md);">
+          {% if is_hindi %}
+            साइबर कैफ़े या बिचौलियों को अतिरिक्त रुपये देना बंद करें। हमारा सीधा, कदम-दर-कदम मार्गदर्शन आपको आधिकारिक पोर्टल पर सुरक्षित आवेदन करना सिखाता है।
+          {% else %}
+            Stop overpaying middlemen for tasks you can do yourself on your phone. Verified steps, exact photo requirements, official fees, and authentic portal links.
+          {% endif %}
+        </p>
+
+        <div class="animate-enter delay-2" style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+          <a href="{% url 'wizard:start' %}" class="btn btn-primary btn-large">
+            {% if is_hindi %}फॉर्म विज़ार्ड शुरू करें{% else %}Start Form Wizard{% endif %}
+          </a>
+          <a href="{% url 'guides:guide_list' %}" class="btn btn-secondary btn-large">
+            {% if is_hindi %}सभी गाइड्स देखें{% else %}Browse All Guides{% endif %}
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Hero Specimen Image (Focal Point) -->
+      <div class="animate-enter delay-2">
+        <div class="specimen-frame" style="max-height: 440px;">
+          <img src="{% static 'img/november-a-general-post-delivery-in-opposition.jpg' %}" 
+               width="1920" height="1183" 
+               alt="A historical print depicting postal communication and public parcel distribution on India paper" 
+               class="specimen-image" 
+               decoding="async">
+        </div>
+        <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-top: 6px; text-align: right;">
+          Public communications archive, Art Institute of Chicago (CC0)
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Quick Category Directory (Editorial Ledger Layout) -->
+  <section style="margin-bottom: var(--spacing-xl);" class="animate-enter delay-3">
+    <h2>{% if is_hindi %}श्रेणी अनुसार खोजें{% else %}Select What You Need{% endif %}</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--spacing-xs); margin-top: var(--spacing-sm); background-color: var(--surface-tint); padding: var(--spacing-xs); border: 2px solid var(--ink-primary);">
+      {% for cat in categories %}
+        <a href="{% url 'guides:guide_list' %}?category={{ cat.slug }}" style="padding: 12px var(--spacing-sm); text-decoration: none; display: flex; justify-content: space-between; align-items: center; background-color: var(--surface-card); color: var(--ink-primary); font-weight: 600; font-size: 1.05rem;">
+          <span>{{ cat.name }}</span>
+          <span style="color: var(--stamp-red); font-weight: bold;">&rarr;</span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Popular Seed Guides -->
+  <section style="margin-bottom: var(--spacing-xl);">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: var(--spacing-sm);" class="animate-enter delay-3">
+      <h2>{% if is_hindi %}प्रमुख राष्ट्रीय सरकारी गाइड्स{% else %}Verified Government Form Guides{% endif %}</h2>
+      <a href="{% url 'guides:guide_list' %}" style="font-weight: 600;">
+        {% if is_hindi %}सभी देखें &rarr;{% else %}See all guides &rarr;{% endif %}
+      </a>
+    </div>
+
+    <!-- Official Stamp & Document Authenticity Specimen Row -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-lg);" class="animate-enter delay-4">
+      <div class="specimen-frame" style="max-height: 220px;">
+        <img src="{% static 'img/stamp-of-chamba-1938-colnect-601464-1.jpg' %}" 
+             width="1024" height="632" 
+             alt="A certified Indian postal stamp specimen representing official government dispatch" 
+             class="specimen-image" 
+             loading="lazy" 
+             decoding="async">
+      </div>
+      <div class="specimen-frame" style="max-height: 220px;">
+        <img src="{% static 'img/figure-of-fantastic-human-like-creature-with.jpg' %}" 
+             width="3231" height="2347" 
+             alt="An archival ledger and registry document fragment representing administrative paperwork records" 
+             class="specimen-image" 
+             loading="lazy" 
+             decoding="async">
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-sm);">
+      {% for item in guides_data %}
+        <article class="paper-card animate-card delay-{{ forloop.counter }}" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: var(--spacing-xs);">
+              <span class="mode-badge">{{ item.mode_display }}</span>
+              <span class="stamp-badge stamp-badge-verified">{% if is_hindi %}सत्यापित{% else %}Verified guide{% endif %}</span>
+            </div>
+
+            <h3 style="font-size: 1.35rem; margin-top: var(--spacing-xs);">
+              <a href="{% url 'guides:guide_detail' item.guide.slug %}" style="text-decoration: none; color: var(--ink-primary);">
+                {{ item.title }}
+              </a>
+            </h3>
+
+            <p style="font-size: 1rem; color: var(--ink-secondary); margin-top: var(--spacing-xs);">
+              {{ item.summary|truncatewords:20 }}
+            </p>
+          </div>
+
+          <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-sm); border-top: 2px solid var(--surface-tint); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; color: var(--stamp-red);">
+              {{ item.guide.fee_text }}
+            </div>
+            <a href="{% url 'guides:guide_detail' item.guide.slug %}" class="btn btn-secondary" style="min-height: 40px; padding: 6px 14px; font-size: 0.95rem;">
+              {% if is_hindi %}गाइड खोलें{% else %}Open Guide{% endif %}
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Citizen Privacy Charter with Archival Illustration -->
+  <section class="paper-card animate-enter delay-5" style="background-color: var(--surface-tint); border: 2px solid var(--ink-primary); padding: var(--spacing-lg);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--spacing-lg); align-items: center;">
+      <div>
+        <h2 style="font-size: 1.75rem;">{% if is_hindi %}नागरिक सुरक्षा चार्टर{% else %}Citizen Privacy Charter{% endif %}</h2>
+        
+        <div style="margin-top: var(--spacing-sm);">
+          <h4>{% if is_hindi %}1. कोई संवेदनशील डेटा नहीं{% else %}1. Zero Credential Access{% endif %}</h4>
+          <p style="font-size: 1rem; color: var(--ink-secondary);">
+            {% if is_hindi %}
+              हम कभी भी आधार नंबर, बैंक विवरण, पासवर्ड या सरकारी पोर्टल के ओटीपी नहीं मांगते।
+            {% else %}
+              We never request or store your Aadhaar number, passwords, bank details, or government portal OTPs.
+            {% endif %}
+          </p>
+
+          <h4>{% if is_hindi %}2. सुरक्षित इन-ब्राउज़र टूल{% else %}2. Private In-Browser Files{% endif %}</h4>
+          <p style="font-size: 1rem; color: var(--ink-secondary);">
+            {% if is_hindi %}
+              फोटो और हस्ताक्षर रीसाइज़िंग आपके फ़ोन के ब्राउज़र में होती है। कोई फ़ाइल हमारे सर्वर पर अपलोड नहीं होती।
+            {% else %}
+              Document and photo editing happens in your device browser. Files are never uploaded or stored on our servers.
+            {% endif %}
+          </p>
+
+          <h4>{% if is_hindi %}3. केवल अधिकृत सरकारी पोर्टल लिंक{% else %}3. Strictly Official Links{% endif %}</h4>
+          <p style="font-size: 1rem; color: var(--ink-secondary);">
+            {% if is_hindi %}
+              प्रत्येक गाइड में केवल अधिकृत (.gov.in या .nic.in) वेबसाइट का लिंक और फ़र्ज़ी साइटों की चेतावनी होती है।
+            {% else %}
+              Every guide points strictly to authorized government web addresses and alerts you against look-alike scam portals.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div class="specimen-frame">
+          <img src="{% static 'img/woman-sealing-a-letter.jpg' %}" 
+               width="1920" height="2336" 
+               alt="A period engraving representing privacy and secure official correspondence" 
+               class="specimen-image" 
+               loading="lazy" 
+               decoding="async">
+        </div>
+        <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-top: 6px; text-align: center;">
+          Confidential correspondence engraving (1738)
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

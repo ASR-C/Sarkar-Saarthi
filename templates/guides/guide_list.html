@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}सभी सरकारी फॉर्म गाइड्स - सरकार साथी{% else %}All Government Form Guides - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div style="margin-bottom: var(--spacing-lg);">
+    <h1>{% if is_hindi %}सरकारी फॉर्म गाइड्स सूची{% else %}Official Government Form Guides{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead);">
+      {% if is_hindi %}
+        सत्यापित कदम, आधिकारिक शुल्क, फ़ोटो नियम और सीधे सरकारी पोर्टल लिंक।
+      {% else %}
+        Verified steps, official fees, photo specifications, and direct official portal links.
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Filters & Search Form -->
+  <form method="get" class="paper-card" style="padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: var(--spacing-sm); align-items: end;">
+      <div>
+        <label class="form-label" for="search-input">{% if is_hindi %}फॉर्म खोजें{% else %}Search Forms{% endif %}</label>
+        <input type="text" name="q" id="search-input" value="{{ query }}" placeholder="{% if is_hindi %}उदा. पासपोर्ट, पैन कार्ड, ड्राइविंग लाइसेंस{% else %}e.g. Passport, PAN Card, Driving Licence{% endif %}" class="form-input">
+      </div>
+
+      <div>
+        <label class="form-label" for="category-select">{% if is_hindi %}श्रेणी{% else %}Category{% endif %}</label>
+        <select name="category" id="category-select" class="form-select">
+          <option value="">{% if is_hindi %}सभी श्रेणियां{% else %}All Categories{% endif %}</option>
+          {% for cat in categories %}
+            <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label class="form-label" for="mode-select">{% if is_hindi %}प्रक्रिया का प्रकार{% else %}Mode{% endif %}</label>
+        <select name="mode" id="mode-select" class="form-select">
+          <option value="">{% if is_hindi %}सभी प्रकार{% else %}All Modes{% endif %}</option>
+          <option value="online" {% if selected_mode == 'online' %}selected{% endif %}>{% if is_hindi %}पूर्णतः ऑनलाइन{% else %}Fully Online{% endif %}</option>
+          <option value="partial" {% if selected_mode == 'partial' %}selected{% endif %}>{% if is_hindi %}आंशिक ऑनलाइन (विजिट आवश्यक){% else %}Partly Online (Visit Needed){% endif %}</option>
+          <option value="in_person" {% if selected_mode == 'in_person' %}selected{% endif %}>{% if is_hindi %}केवल व्यक्तिगत रूप से{% else %}In-Person Only{% endif %}</option>
+        </select>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary" style="min-height: 48px; width: 100%;">
+          {% if is_hindi %}खोजें{% else %}Filter{% endif %}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Guides Grid -->
+  {% if guides_data %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--spacing-md);">
+      {% for item in guides_data %}
+        <article class="paper-card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: var(--spacing-xs);">
+              <span class="mode-badge">{{ item.mode_display }}</span>
+              <span class="stamp-badge stamp-badge-verified">{% if is_hindi %}सत्यापित{% else %}VERIFIED{% endif %}</span>
+            </div>
+
+            <h3 style="font-size: 1.35rem; margin-top: var(--spacing-xs);">
+              <a href="{% url 'guides:guide_detail' item.guide.slug %}" style="text-decoration: none; color: var(--ink-primary);">
+                {{ item.title }}
+              </a>
+            </h3>
+
+            <p style="font-size: 0.95rem; color: var(--ink-secondary); margin-top: var(--spacing-xs);">
+              {{ item.summary|truncatewords:22 }}
+            </p>
+          </div>
+
+          <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-sm); border-top: 2px solid var(--surface-tint); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 700; color: var(--stamp-red);">
+              {{ item.guide.fee_text }}
+            </div>
+            <a href="{% url 'guides:guide_detail' item.guide.slug %}" class="btn btn-secondary" style="min-height: 40px; padding: 6px 14px; font-size: 0.9rem;">
+              {% if is_hindi %}गाइड खोलें{% else %}Open Guide{% endif %}
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="paper-card" style="text-align: center; padding: var(--spacing-xl);">
+      <h2>{% if is_hindi %}कोई फॉर्म नहीं मिला{% else %}No guides match your search{% endif %}</h2>
+      <p style="color: var(--ink-secondary); margin-top: var(--spacing-xs);">
+        {% if is_hindi %}
+          कृपया अलग शब्द खोजें या हमारी संपूर्ण सूची देखें।
+        {% else %}
+          Try adjusting your search filters or browse by category.
+        {% endif %}
+      </p>
+      <a href="{% url 'guides:guide_list' %}" class="btn btn-secondary" style="margin-top: var(--spacing-sm);">
+        {% if is_hindi %}सभी फ़िल्टर हटाएं{% else %}Reset Filters{% endif %}
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}लॉग इन करें - सरकार साथी{% else %}Citizen Login - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap" style="max-width: 520px;">
+  <div style="margin-bottom: var(--spacing-lg);">
+    <h1>{% if is_hindi %}खाते में प्रवेश करें{% else %}Log In to Your Account{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead);">
+      {% if is_hindi %}
+        अपने पंजीकृत ईमेल और पासवर्ड से सीधे प्रवेश करें।
+      {% else %}
+        Enter your registered email and password to access your saved guides.
+      {% endif %}
+    </p>
+  </div>
+
+  <form method="post" class="paper-card" style="padding: var(--spacing-lg);">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="flash-message flash-error" style="margin-bottom: var(--spacing-sm);">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.email.id_for_label }}">
+        {% if is_hindi %}ईमेल पता (Email Address){% else %}Email Address{% endif %}
+      </label>
+      {{ form.email }}
+      {% if form.email.errors %}<div class="form-error">{{ form.email.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.password.id_for_label }}">
+        {% if is_hindi %}पासवर्ड (Password){% else %}Password{% endif %}
+      </label>
+      {{ form.password }}
+      {% if form.password.errors %}<div class="form-error">{{ form.password.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div style="margin-top: var(--spacing-lg);">
+      <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+        {% if is_hindi %}प्रवेश करें (Log In){% else %}Log In &rarr;{% endif %}
+      </button>
+    </div>
+
+    <div style="margin-top: var(--spacing-md); text-align: center; font-size: 0.95rem;">
+      {% if is_hindi %}खाता नहीं है?{% else %}Don't have an account?{% endif %} 
+      <a href="{% url 'accounts:signup' %}" style="font-weight: 700;">
+        {% if is_hindi %}नया नागरिक खाता बनाएं{% else %}Register here{% endif %}
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

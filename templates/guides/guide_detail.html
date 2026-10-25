@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ translation.title }} - Sarkari Saathi{% endblock %}
+{% block meta_description %}{{ translation.summary|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+
+  <!-- Breadcrumbs & Meta -->
+  <nav aria-label="Breadcrumb" style="margin-bottom: var(--spacing-sm); font-size: 0.95rem; color: var(--ink-secondary);">
+    <a href="{% url 'core:home' %}">{% if is_hindi %}होम{% else %}Home{% endif %}</a> / 
+    <a href="{% url 'guides:guide_list' %}">{% if is_hindi %}गाइड्स{% else %}Guides{% endif %}</a> / 
+    <span>{{ guide.category.name }}</span>
+  </nav>
+
+  <!-- 1. Outdated Warning Banner (if older than 30 days) -->
+  {% if is_outdated %}
+    <div class="flash-message flash-error" style="margin-bottom: var(--spacing-md);">
+      <strong>{% if is_hindi %}सावधानी:{% else %}Notice:{% endif %}</strong>
+      {% if is_hindi %}
+        यह गाइड 30 दिनों से अधिक पुरानी हो सकती है। कृपया प्रक्रिया शुरू करने से पहले आधिकारिक वेबसाइट पर नवीनतम नियमों की पुष्टि करें।
+      {% else %}
+        This guide has not been reviewed in the last 30 days and some government portal rules may have updated. Always confirm on the official portal.
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- Header Section with Focal Point -->
+  <header style="margin-bottom: var(--spacing-lg);" class="animate-enter">
+    <h1>{{ translation.title }}</h1>
+    
+    <div style="display: flex; gap: var(--spacing-xs); align-items: center; flex-wrap: wrap; margin-bottom: var(--spacing-sm);">
+      <span class="mode-badge">{{ guide.get_mode_display }}</span>
+      <span class="stamp-badge stamp-badge-verified">
+        {% if is_hindi %}सत्यापित गाइड{% else %}Verified guide{% endif %}
+      </span>
+      {% if guide.last_date %}
+        <span class="mode-badge">
+          {% if is_hindi %}अंतिम तिथि:{% else %}Deadline:{% endif %} {{ guide.last_date }}
+        </span>
+      {% endif %}
+    </div>
+
+    <p style="font-size: var(--font-size-lead); color: var(--ink-secondary); line-height: 1.5;">
+      {{ translation.summary }}
+    </p>
+  </header>
+
+  <!-- Specimen Stamp Archive Visual Banner (4 Authentic Historical Plates) -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); width: 100%;" class="animate-enter delay-1">
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/stamp-of-chamba-1938-colnect-601464-1.jpg' %}" 
+           width="1024" height="632" 
+           alt="Official postal stamp dispatch specimen representing verified administrative procedure" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/figure-of-fantastic-human-like-creature-with.jpg' %}" 
+           width="3231" height="2347" 
+           alt="Historical engraving of administrative verification and record keeping ledger" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/november-a-general-post-delivery-in-opposition.jpg' %}" 
+           width="3000" height="2138" 
+           alt="Archival administrative ledger and document distribution record" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+    <div class="specimen-frame" style="max-height: 180px;">
+      <img src="{% static 'img/woman-sealing-a-letter.jpg' %}" 
+           width="1920" height="2336" 
+           alt="Period engraving representing privacy in official administrative correspondence" 
+           class="specimen-image" 
+           decoding="async">
+    </div>
+  </div>
+
+  <!-- 2. Official Fee Card (Receipt Style with Fair Pricing Line) -->
+  <section class="receipt-card animate-enter delay-2" style="margin-bottom: var(--spacing-lg);">
+    <div style="font-family: var(--font-serif); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-secondary);">
+      {% if is_hindi %}आधिकारिक सरकारी शुल्क रसीद{% else %}Official Government Fee Schedule{% endif %}
+    </div>
+    
+    <div style="margin: var(--spacing-sm) 0; height: 4px;"></div>
+
+    <div class="receipt-row">
+      <p style="margin: 0; font-size: 1.05rem;">{% if is_hindi %}आधिकारिक शुल्क (Government Fee):{% else %}Official Portal Fee:{% endif %}</p>
+      <div style="font-weight: 700; font-size: 1.15rem; color: var(--stamp-red);">{{ guide.fee_text }}</div>
+    </div>
+
+    <div class="fair-pricing-box">
+      <strong>{% if is_hindi %}उचित मूल्य सूचना (Fair Pricing Rule):{% else %}Fair Pricing Notice:{% endif %}</strong>
+      {% if is_hindi %}
+        यह सरकार द्वारा निर्धारित वास्तविक आधिकारिक शुल्क है। साइबर कैफ़े या बिचौलिए इसके अतिरिक्त अपनी सेवा का शुल्क जोड़ते हैं। आप यह फॉर्म घर बैठे स्वयं बिल्कुल निःशुल्क भर सकते हैं।
+      {% else %}
+        This is the official fee. Anyone you pay for help will charge extra on top of it, and you can do this yourself for free.
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 5. Official Website Link with Stamp & Fake-Site Warning -->
+  <section class="official-link-card animate-enter delay-2">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <h3 style="margin: 0; color: var(--stamp-green);">
+        {% if is_hindi %}केवल इसी आधिकारिक वेबसाइट पर जाएं{% else %}Official Portal Web Address{% endif %}
+      </h3>
+      <span class="stamp-badge stamp-badge-verified">{% if is_hindi %}सत्यापित डोमेन{% else %}Verified domain{% endif %}</span>
+    </div>
+
+    <div class="official-url-row">
+      <a href="{{ guide.official_link.url }}" target="_blank" rel="noopener noreferrer" class="official-url-link">
+        {{ guide.official_link.url }} &nearr;
+      </a>
+      <a href="{{ guide.official_link.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        {% if is_hindi %}आधिकारिक पोर्टल खोलें{% else %}Open Official Website{% endif %}
+      </a>
+    </div>
+
+    <div class="fake-site-warning">
+      <strong>{% if is_hindi %}सावधान! फ़र्ज़ी वेबसाइटों से बचें:{% else %}Security Warning:{% endif %}</strong>
+      {% if is_hindi %}
+        गूगल सर्च में दिखने वाली विज्ञापन वाली या .com / .org जैसी प्राइवेट साइटों से बचें। हमेशा जांचें कि वेबसाइट के पते में अंत में <strong>.gov.in</strong> या <strong>.nic.in</strong> अवश्य हो।
+      {% else %}
+        Beware of look-alike scam sites and search ads. Only submit applications on verified domains ending with <strong>.gov.in</strong> or <strong>.nic.in</strong>.
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 4. Documents Needed Checklist & Technical Specifications -->
+  <section class="paper-card animate-enter delay-3" style="margin-bottom: var(--spacing-lg);">
+    <h2>{% if is_hindi %}आवश्यक दस्तावेज़ व फ़ोटो नियम{% else %}Documents &amp; Photo Rules{% endif %}</h2>
+    <p style="color: var(--ink-secondary);">
+      {% if is_hindi %}
+        आवेदन शुरू करने से पहले इन दस्तावेज़ों को बताई गई साइज़ और फ़ॉर्मेट में तैयार रखें:
+      {% else %}
+        Keep these documents scanned and ready before beginning your application:
+      {% endif %}
+    </p>
+
+    {% if documents %}
+      <div class="specs-table-wrap" style="overflow-x: auto; width: 100%;">
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th>{% if is_hindi %}दस्तावेज़ का नाम{% else %}Document Name{% endif %}</th>
+              <th>{% if is_hindi %}प्रकार{% else %}Type{% endif %}</th>
+              <th>{% if is_hindi %}मान्य प्रारूप{% else %}Allowed Formats{% endif %}</th>
+              <th>{% if is_hindi %}साइज़ सीमा (KB){% else %}Size (KB){% endif %}</th>
+              <th>{% if is_hindi %}आयाम (पिक्सेल/DPI){% else %}Dimensions / DPI{% endif %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doc in documents %}
+              <tr>
+                <td data-label="{% if is_hindi %}दस्तावेज़{% else %}Document{% endif %}"><strong>{{ doc.name }}</strong></td>
+                <td data-label="{% if is_hindi %}प्रकार{% else %}Type{% endif %}"><span class="mode-badge">{{ doc.get_kind_display }}</span></td>
+                <td data-label="{% if is_hindi %}प्रारूप{% else %}Format{% endif %}">{{ doc.allowed_formats }}</td>
+                <td data-label="{% if is_hindi %}साइज़{% else %}Size{% endif %}">
+                  {% if doc.min_kb and doc.max_kb %}
+                    {{ doc.min_kb }} KB – {{ doc.max_kb }} KB
+                  {% elif doc.max_kb %}
+                    Max {{ doc.max_kb }} KB
+                  {% else %}
+                    Standard
+                  {% endif %}
+                </td>
+                <td data-label="{% if is_hindi %}आयाम{% else %}Dimensions{% endif %}">
+                  {% if doc.width_px and doc.height_px %}
+                    {{ doc.width_px }} &times; {{ doc.height_px }} px
+                  {% elif doc.dpi %}
+                    {{ doc.dpi }} DPI
+                  {% else %}
+                    Standard
+                  {% endif %}
+                  {% if doc.notes %}<br><span style="display: inline-block; font-size: 0.95rem; color: var(--ink-secondary); margin-top: 4px;">{{ doc.notes }}</span>{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p style="font-style: italic; color: var(--ink-secondary);">
+        {% if is_hindi %}सामान्य पहचान पत्र व आवश्यक मूल प्रमाण पत्र।{% else %}Standard identity and eligibility proofs required.{% endif %}
+      </p>
+    {% endif %}
+  </section>
+
+  <!-- 6. Numbered Steps on Ruled Form -->
+  <section style="margin-bottom: var(--spacing-lg); width: 100%;" class="animate-enter delay-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+      <h2>{% if is_hindi %}आवेदन प्रक्रिया के चरण{% else %}Step-by-Step Instructions{% endif %}</h2>
+      <span class="mode-badge">{% if is_hindi %}प्रमाणित क्रम{% else %}Verified order{% endif %}</span>
+    </div>
+    <p style="color: var(--ink-secondary);">
+      {% if is_hindi %}
+        नीचे दिए गए चरणों का एक-एक करके पालन करें। सरकारी पोर्टल के बटन अंग्रेज़ी में कोष्ठक में दिखाए गए हैं:
+      {% else %}
+        Follow these steps sequentially on the official portal:
+      {% endif %}
+    </p>
+
+    <div class="ruled-steps">
+      {% for step in steps %}
+        <div class="step-row animate-enter delay-{{ forloop.counter|default:1 }}">
+          <div style="display: flex; gap: var(--spacing-md); align-items: flex-start; flex: 1;">
+            <div class="step-numeral">{{ step.position }}</div>
+            <div class="step-content">
+              {% if step.portal_label_en %}
+                <div>
+                  <span class="step-portal-action">{{ step.portal_label_en }}</span>
+                </div>
+              {% endif %}
+              <p style="margin: 0; font-size: 1.05rem; line-height: 1.6;">
+                {{ step.body|linebreaksbr }}
+              </p>
+            </div>
+          </div>
+          <div class="step-badge-col">
+            <span class="mode-badge" style="white-space: nowrap;">{% if is_hindi %}चरण {{ step.position }}{% else %}Step {{ step.position }}{% endif %}</span>
+          </div>
+        </div>
+      {% empty %}
+        <p style="font-style: italic;">Detailed steps will be updated shortly.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 7. Common Mistakes That Cause Rejection -->
+  {% if translation.common_mistakes %}
+    <section class="paper-card animate-enter delay-4" style="border-left: 8px solid var(--stamp-red); margin-bottom: var(--spacing-lg); width: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <h2 style="color: var(--stamp-red);">
+          {% if is_hindi %}फॉर्म रद्द होने के मुख्य कारण (Common Mistakes){% else %}Common Mistakes That Cause Rejection{% endif %}
+        </h2>
+        <span class="stamp-badge stamp-badge-alert">{% if is_hindi %}त्रुटि चेतावनी{% else %}Rejection risk{% endif %}</span>
+      </div>
+      <div style="font-size: 1.05rem; line-height: 1.7; margin-top: var(--spacing-xs);">
+        {{ translation.common_mistakes|linebreaks }}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- 8. What to do if it fails -->
+  {% if translation.what_to_do_if_fails %}
+    <section class="paper-card animate-enter delay-5" style="margin-bottom: var(--spacing-lg); background-color: var(--surface-tint);">
+      <h2>{% if is_hindi %}यदि आवेदन अटक जाए या असफल हो जाए?{% else %}What To Do If It Fails{% endif %}</h2>
+      <div style="font-size: 1.05rem; line-height: 1.7; margin-top: var(--spacing-xs);">
+        {{ translation.what_to_do_if_fails|linebreaks }}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- 9. Verification Stamp & Reviewer -->
+  <section class="paper-card animate-enter delay-5" style="padding: var(--spacing-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-sm);">
+    <div>
+      <div style="font-size: 0.95rem; color: var(--ink-secondary);">
+        {% if is_hindi %}सत्यापन तिथि (Last Verified):{% else %}Last Verified Date:{% endif %}
+      </div>
+      <div style="font-weight: 700; font-size: 1.15rem;">
+        {{ guide.last_verified_at|date:"d F Y" }}
+      </div>
+      <div style="font-size: 0.9rem; color: var(--ink-secondary);">
+        {% if is_hindi %}समीक्षक:{% else %}Verified by:{% endif %} 
+        {% if guide.verified_by %}{{ guide.verified_by.name }}{% else %}Sarkari Saathi Editorial Desk{% endif %}
+      </div>
+    </div>
+
+    <div>
+      <span class="stamp-badge stamp-badge-verified" style="font-size: 1rem; padding: 6px 16px;">
+        {% if is_hindi %}प्रमाणित गाइड{% else %}Checked &amp; Verified{% endif %}
+      </span>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

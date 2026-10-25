@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_hindi %}खाता बनाएं - सरकार साथी{% else %}Citizen Registration - Sarkari Saathi{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap" style="max-width: 580px;">
+  <div style="margin-bottom: var(--spacing-lg);">
+    <h1>{% if is_hindi %}नागरिक पंजीकरण{% else %}Create Your Account{% endif %}</h1>
+    <p style="color: var(--ink-secondary); font-size: var(--font-size-lead);">
+      {% if is_hindi %}
+        ईमेल ओटीपी द्वारा त्वरित सत्यापन। हम कभी भी आपका आधार नंबर या पासवर्ड नहीं मांगते।
+      {% else %}
+        Instant email OTP verification. We never request Aadhaar numbers or government credentials.
+      {% endif %}
+    </p>
+  </div>
+
+  <form method="post" class="paper-card" style="padding: var(--spacing-lg);">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="flash-message flash-error" style="margin-bottom: var(--spacing-sm);">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.name.id_for_label }}">
+        {% if is_hindi %}आपका पूरा नाम (Full Name){% else %}Full Name{% endif %}
+      </label>
+      {{ form.name }}
+      {% if form.name.errors %}<div class="form-error">{{ form.name.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.email.id_for_label }}">
+        {% if is_hindi %}ईमेल पता (Email Address - ओटीपी के लिए){% else %}Email Address (For verification OTP){% endif %}
+      </label>
+      {{ form.email }}
+      {% if form.email.errors %}<div class="form-error">{{ form.email.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.language.id_for_label }}">
+        {% if is_hindi %}पसंदीदा भाषा (Preferred Language){% else %}Preferred Language{% endif %}
+      </label>
+      {{ form.language }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.state.id_for_label }}">
+        {% if is_hindi %}राज्य / केंद्र शासित प्रदेश (State / UT){% else %}State / Union Territory{% endif %}
+      </label>
+      {{ form.state }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.password.id_for_label }}">
+        {% if is_hindi %}पासवर्ड बनाएं (Password - न्यूनतम 8 अक्षर){% else %}Create Password (Minimum 8 characters){% endif %}
+      </label>
+      {{ form.password }}
+      {% if form.password.errors %}<div class="form-error">{{ form.password.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="{{ form.confirm_password.id_for_label }}">
+        {% if is_hindi %}पासवर्ड की पुनः पुष्टि करें (Confirm Password){% else %}Confirm Password{% endif %}
+      </label>
+      {{ form.confirm_password }}
+      {% if form.confirm_password.errors %}<div class="form-error">{{ form.confirm_password.errors.0 }}</div>{% endif %}
+    </div>
+
+    <!-- DPDP Act Consent Checkbox -->
+    <div class="form-group" style="margin-top: var(--spacing-md); padding: var(--spacing-sm); background-color: var(--surface-tint); border: 2px solid var(--ink-primary); border-radius: var(--radius-sharp);">
+      <label style="display: flex; gap: 10px; align-items: flex-start; cursor: pointer;">
+        {{ form.consent }}
+        <span style="font-size: 0.95rem; line-height: 1.5;">
+          {% if is_hindi %}
+            मैं प्रमाणित करता/करती हूँ कि मैं समझता/समझती हूँ कि सरकार साथी एक स्वतंत्र नागरिक सहायता गाइड है। यह किसी सरकारी पोर्टल की ओर से फॉर्म जमा नहीं करता और न ही व्यक्तिगत गोपनीय क्रेडेंशियल्स संग्रहित करता है।
+          {% else %}
+            I agree to the terms and confirm understanding that Sarkari Saathi is an independent informational guide and never submits forms or stores official credentials on my behalf.
+          {% endif %}
+        </span>
+      </label>
+      {% if form.consent.errors %}<div class="form-error">{{ form.consent.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div style="margin-top: var(--spacing-lg);">
+      <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+        {% if is_hindi %}ओटीपी भेजें व खाता बनाएं{% else %}Send Verification Code &rarr;{% endif %}
+      </button>
+    </div>
+
+    <div style="margin-top: var(--spacing-md); text-align: center; font-size: 0.95rem;">
+      {% if is_hindi %}पहले से पंजीकृत हैं?{% else %}Already have an account?{% endif %} 
+      <a href="{% url 'accounts:login' %}" style="font-weight: 700;">
+        {% if is_hindi %}यहाँ लॉग इन करें{% else %}Log in here{% endif %}
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Sarkari Saathi - Government Form Guidance Platform{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Free step-by-step guidance for citizens to complete official government forms correctly at home without paying middlemen.{% endblock %}">
+
+  <!-- Fonts: Erode (Serif Display), Fraunces, and Noto Sans -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=erode@400,401,500,600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Top Independent Trust Bar -->
+  <aside class="trust-bar" aria-label="Official Independence Notice">
+    <div class="trust-bar-content">
+      <div class="trust-disclaimer">
+        <span class="trust-dot" aria-hidden="true"></span>
+        {% if is_marwadi %}{{ disclaimer_mwr }}{% elif is_hindi %}{{ disclaimer_hi }}{% else %}{{ disclaimer_en }}{% endif %}
+      </div>
+    </div>
+  </aside>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="page-wrap header-inner">
+      <a href="{% url 'core:home' %}" class="brand-block">
+        <div class="brand-title">Sarkari Saathi</div>
+        <p class="brand-tagline">
+          {% if is_marwadi %}{{ site_tagline_mwr }}{% elif is_hindi %}{{ site_tagline_hi }}{% else %}{{ site_tagline_en }}{% endif %}
+        </p>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li>
+            <a href="{% url 'wizard:start' %}">
+              <strong>{% if is_marwadi %}फॉर्म खोजो (Wizard){% elif is_hindi %}फॉर्म खोजें (Wizard){% else %}Find Your Form{% endif %}</strong>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'guides:guide_list' %}">
+              {% if is_marwadi %}सगळी गाइड्स{% elif is_hindi %}सभी गाइड्स{% else %}Browse Guides{% endif %}
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'guides:official_links' %}">
+              {% if is_marwadi %}सरकारी वेबसाइट्स{% elif is_hindi %}सरकारी वेबसाइट्स{% else %}Official Links{% endif %}
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'core:about' %}">
+              {% if is_marwadi %}म्हारा बारे में{% elif is_hindi %}हमारे बारे में{% else %}About &amp; Privacy{% endif %}
+            </a>
+          </li>
+          <li class="lang-switch-box" style="display: flex; gap: 6px; align-items: center; font-size: 0.95rem;">
+            <a href="{% url 'core:set_language' %}?lang=en&next={{ request.path }}" style="{% if current_lang == 'en' %}font-weight: 700; color: var(--ink-primary); text-decoration: underline;{% else %}color: var(--ink-secondary); text-decoration: none;{% endif %}">EN</a>
+            <span style="color: var(--ink-secondary);">·</span>
+            <a href="{% url 'core:set_language' %}?lang=hi&next={{ request.path }}" style="{% if current_lang == 'hi' %}font-weight: 700; color: var(--stamp-red); text-decoration: underline;{% else %}color: var(--ink-secondary); text-decoration: none;{% endif %}">हिन्दी</a>
+            <span style="color: var(--ink-secondary);">·</span>
+            <a href="{% url 'core:set_language' %}?lang=mwr&next={{ request.path }}" style="{% if current_lang == 'mwr' %}font-weight: 700; color: var(--stamp-red); text-decoration: underline;{% else %}color: var(--ink-secondary); text-decoration: none;{% endif %}">मारवाड़ी</a>
+          </li>
+
+          {% if user.is_authenticated %}
+            <li><span style="font-weight: 600; color: var(--stamp-green);">{{ user.name }}</span></li>
+            <li><a href="{% url 'accounts:logout' %}">{% if is_marwadi %}लॉग आउट{% elif is_hindi %}लॉग आउट{% else %}Log Out{% endif %}</a></li>
+          {% else %}
+            <li><a href="{% url 'accounts:login' %}">{% if is_marwadi %}लॉग इन{% elif is_hindi %}लॉग इन{% else %}Log In{% endif %}</a></li>
+            <li><a href="{% url 'accounts:signup' %}" class="btn btn-secondary" style="min-height: 38px; padding: 6px 14px; font-size: 0.95rem;">{% if is_marwadi %}खातो बणाओ{% elif is_hindi %}खाता बनाएं{% else %}Sign Up{% endif %}</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+    <div class="page-wrap" style="margin-top: var(--spacing-sm);">
+      {% for message in messages %}
+        <div class="flash-message {% if message.tags == 'success' %}flash-success{% elif message.tags == 'error' %}flash-error{% else %}flash-info{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main id="main-content" style="flex: 1; padding: var(--spacing-md) 0;">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="page-wrap">
+      <div class="footer-grid">
+        <div>
+          <h3 style="font-size: 1.4rem;">Sarkari Saathi</h3>
+          <p style="margin-top: var(--spacing-xs); font-size: 0.95rem; color: var(--ink-secondary);">
+            {% if is_marwadi %}
+              म्हे लोगां ने सरकारी पोर्टल पर घरे बैठा फॉर्म भरणो सिखावां ताके कोई दलाल या ई-मित्र वाळा ने बत्ती फीस नी देणी पड़े। म्हे कदे भी आपरा पासवर्ड, ओटीपी या आधार नंबर नी माँगां।
+            {% elif is_hindi %}
+              हम नागरिकों को सरकारी पोर्टल पर स्वयं फॉर्म भरना सिखाते हैं ताकि किसी दलाल या साइबर कैफ़े को अतिरिक्त शुल्क न देना पड़े। हम कभी भी आपसे पासवर्ड, ओटीपी या आधार नंबर नहीं मांगते।
+            {% else %}
+              We teach citizens how to fill official government forms at home so you never have to overpay agents or middlemen. We never submit forms for you and never touch your credentials.
+            {% endif %}
+          </p>
+        </div>
+
+        <div>
+          <h4>{% if is_marwadi %}मुख्य सेवावां{% elif is_hindi %}प्रमुख सेवाएं{% else %}Services{% endif %}</h4>
+          <ul style="list-style: none; margin-top: var(--spacing-xs); line-height: 2;">
+            <li><a href="{% url 'wizard:start' %}">{% if is_marwadi %}फॉर्म विज़ार्ड{% elif is_hindi %}फॉर्म विज़ार्ड{% else %}Step-by-Step Wizard{% endif %}</a></li>
+            <li><a href="{% url 'guides:guide_list' %}">{% if is_marwadi %}गाइड पुस्तकालय{% elif is_hindi %}गाइड पुस्तकालय{% else %}All Form Guides{% endif %}</a></li>
+            <li><a href="{% url 'guides:official_links' %}">{% if is_marwadi %}सत्यापित सरकारी लिंक{% elif is_hindi %}सत्यापित सरकारी लिंक{% else %}Verified Government Portals{% endif %}</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>{% if is_marwadi %}भरोसो अर नियम{% elif is_hindi %}विश्वसनीयता व नियम{% else %}Trust & Integrity{% endif %}</h4>
+          <ul style="list-style: none; margin-top: var(--spacing-xs); line-height: 2;">
+            <li><a href="{% url 'core:about' %}">{% if is_marwadi %}गोपनीयता नीति (DPDP Act){% elif is_hindi %}गोपनीयता नीति (DPDP Act){% else %}Privacy Policy (DPDP Act){% endif %}</a></li>
+            <li><a href="{% url 'guides:official_links' %}">{% if is_marwadi %}फ़र्ज़ी साइट री सूचना देवो{% elif is_hindi %}फ़र्ज़ी साइट की सूचना दें{% else %}Report Suspicious Portal{% endif %}</a></li>
+            <li><a href="{% url 'accounts:signup' %}">{% if is_marwadi %}नागरिक पंजीकरण{% elif is_hindi %}नागरिक पंजीकरण{% else %}Citizen Registration{% endif %}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Sarkari Saathi. Independent Educational Platform.
+        </div>
+        <div>
+          {% if is_marwadi %}
+            मारगदर्शन मात्र। नियम बदल सके है। हमेशा आधिकारिक पोर्टल पर जांच करो।
+          {% elif is_hindi %}
+            मार्गदर्शन मात्र। नियम बदल सकते हैं। हमेशा आधिकारिक पोर्टल पर पुष्टि करें।
+          {% else %}
+            Guidance only. Rules can change. Always verify on official portal.
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="credits-line">
+        Historical public imagery: George Cruikshank, 1839 (Art Institute of Chicago, CC0); Etienne Fessard, 1738 (Art Institute of Chicago, CC0); Post of Chamba, 1938 (Wikimedia Commons, Public Domain).
+      </div>
+    </div>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
